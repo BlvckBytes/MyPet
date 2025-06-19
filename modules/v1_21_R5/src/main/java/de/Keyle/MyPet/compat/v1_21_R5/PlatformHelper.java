@@ -32,7 +32,6 @@ import de.keyle.knbt.TagCompound;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -57,6 +56,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LightningBolt;
@@ -66,6 +66,9 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -81,9 +84,10 @@ import org.bukkit.craftbukkit.v1_21_R5.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R5.util.UnsafeList;
 import org.bukkit.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
@@ -91,6 +95,7 @@ import java.util.List;
 @Compat("v1_21_R5")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemStackNBTConverter.class);
     private static final TagParser<?> TAG_PARSER_INSTANCE = TagParser.create(NbtOps.INSTANCE);
     private static final StackWalker leWalker = StackWalker.getInstance(Collections.singleton(StackWalker.Option.RETAIN_CLASS_REFERENCE), 4);
     public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ad"); //Mojang Field: dragonParts
@@ -246,20 +251,14 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public TagCompound entityToTag(Entity bukkitEntity) {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
-        CompoundTag vanillaNBT = new CompoundTag();
 
-        if (entity instanceof net.minecraft.world.entity.LivingEntity) {
-            ((net.minecraft.world.entity.LivingEntity) entity).addAdditionalSaveData(vanillaNBT);
-        } else {
-            Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
-            try {
-                b.invoke(entity, vanillaNBT);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+        try (
+            ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(LOGGER)
+        ) {
+            TagValueOutput output = TagValueOutput.createWithoutContext(reporter);
+            entity.save(output);
+            return (TagCompound) ItemStackNBTConverter.vanillaCompoundToCompound(output.buildResult());
         }
-
-        return (TagCompound) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
     }
 
     @Override
@@ -267,12 +266,11 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(tag);
         if (vanillaNBT != null) {
-            if (bukkitEntity instanceof Villager) {
-            	net.minecraft.world.entity.npc.Villager villager = (net.minecraft.world.entity.npc.Villager) entity;
-                villager.readAdditionalSaveData(vanillaNBT);
-            } else if (bukkitEntity instanceof net.minecraft.world.entity.npc.WanderingTrader) {
-            	net.minecraft.world.entity.npc.WanderingTrader villager = (net.minecraft.world.entity.npc.WanderingTrader) entity;
-                villager.addAdditionalSaveData(vanillaNBT);
+            try (
+                ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(LOGGER)
+            ) {
+                ValueInput input = TagValueInput.create(reporter, REGISTRY_ACCESS, vanillaNBT);
+                entity.load(input);
             }
         }
     }
