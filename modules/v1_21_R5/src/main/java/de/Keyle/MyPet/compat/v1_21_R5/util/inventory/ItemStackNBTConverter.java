@@ -28,11 +28,17 @@ import de.keyle.knbt.*;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.*;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import org.bukkit.craftbukkit.v1_21_R5.CraftRegistry;
 import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -42,6 +48,8 @@ import java.util.Set;
 @Compat("v1_21_R5")
 public class ItemStackNBTConverter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemStackNBTConverter.class);
+    private static final RegistryAccess REGISTRY_ACCESS = CraftRegistry.getMinecraftRegistry();
 	private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "v"); //List-Field (or value)
     public static RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();
     private static final CompoundTag EMPTY_ITEM_COMPOUND;
@@ -65,7 +73,13 @@ public class ItemStackNBTConverter {
             return EMPTY_ITEM_COMPOUND.copy();
         }
 
-        return (CompoundTag) itemStack.save(registryAccess);
+        try (
+            ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(LOGGER)
+        ) {
+            TagValueOutput output = TagValueOutput.createWithoutContext(reporter);
+            output.store("item", ItemStack.CODEC, itemStack);
+            return (CompoundTag) output.buildResult().get("item");
+        }
     }
 
     public static ItemStack compoundToItemStack(TagCompound compound) {
@@ -82,10 +96,17 @@ public class ItemStackNBTConverter {
 
         // Conversion is fun
         if (compoundTag.contains("tag")) {
-            return ItemStack.parse(registryAccess, convertOldVanillaCompound(compoundTag)).orElse(ItemStack.EMPTY);
+            compoundTag = convertOldVanillaCompound(compoundTag);
         }
 
-        return ItemStack.parse(registryAccess, compoundTag).orElse(ItemStack.EMPTY);
+        try (
+            ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(LOGGER)
+        ) {
+            CompoundTag wrapper = new CompoundTag();
+            wrapper.put("item", compoundTag);
+            ValueInput input = TagValueInput.create(reporter, REGISTRY_ACCESS, compoundTag);
+            return input.read("item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        }
     }
 
     public static CompoundTag convertOldVanillaCompound(CompoundTag oldTag) {
