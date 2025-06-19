@@ -94,8 +94,8 @@ public class EntityMyEnderDragon extends EntityMyFlyingPet {
 			}
 		}
 		if (!registered && this.valid) {
-			if (this.getCommandSenderWorld() instanceof ServerLevel) {
-				ServerLevel world = (ServerLevel) this.getCommandSenderWorld();
+			if (this.level() instanceof ServerLevel) {
+				ServerLevel world = (ServerLevel) this.level();
 				
 				//The next part used to be prettier but... whilst it is listed everywhere I looked, ServerLevel dragonParts isn't public so...
 				Int2ObjectMap dragonParts = (Int2ObjectMap) ReflectionUtil.getFieldValue(dragonPartsField, world);

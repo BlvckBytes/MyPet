@@ -91,7 +91,7 @@ public class ItemStackNBTConverter {
     public static CompoundTag convertOldVanillaCompound(CompoundTag oldTag) {
         Dynamic<Tag> dyn = new Dynamic<>(NbtOps.INSTANCE, oldTag);
         Dynamic<Tag> updatedDyn = DataFixers.getDataFixer().update(References.ITEM_STACK, dyn,
-                1519, SharedConstants.getCurrentVersion().getDataVersion().getVersion());
+                1519, SharedConstants.getCurrentVersion().dataVersion().version());
         return (CompoundTag) updatedDyn.getValue();
     }
 
