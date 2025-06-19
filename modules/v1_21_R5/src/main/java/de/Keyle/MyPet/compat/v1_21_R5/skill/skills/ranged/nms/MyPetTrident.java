@@ -24,13 +24,14 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.skill.skills.ranged.bukkit.CraftMyPetTrident;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 @Compat("v1_21_R5")
 public class MyPetTrident extends ThrownTrident implements EntityMyPetProjectile {
@@ -55,11 +56,11 @@ public class MyPetTrident extends ThrownTrident implements EntityMyPetProjectile
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
+    public void readAdditionalSaveData(ValueInput valueInput) {
     }
 
     @Override

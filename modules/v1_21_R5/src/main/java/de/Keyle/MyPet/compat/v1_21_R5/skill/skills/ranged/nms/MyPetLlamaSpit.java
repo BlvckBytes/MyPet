@@ -26,7 +26,6 @@ import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.skill.skills.ranged.bukkit.CraftMyPetLlamaSpit;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -35,6 +34,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.LlamaSpit;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -68,11 +69,11 @@ public class MyPetLlamaSpit extends LlamaSpit implements EntityMyPetProjectile {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
+    public void readAdditionalSaveData(ValueInput valueInput) {
     }
 
     @Override

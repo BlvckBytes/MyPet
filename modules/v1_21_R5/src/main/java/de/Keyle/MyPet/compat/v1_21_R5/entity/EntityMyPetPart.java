@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_21_R5.entity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftPart;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,6 +30,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 
@@ -57,11 +58,11 @@ public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
+	public void readAdditionalSaveData(ValueInput valueInput) {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
+	public void addAdditionalSaveData(ValueOutput valueOutput) {
 	}
 
 	@Override

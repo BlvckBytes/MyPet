@@ -27,7 +27,6 @@ import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.skill.skills.ranged.bukkit.CraftMyPetEnderPearl;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -36,6 +35,8 @@ import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -69,11 +70,11 @@ public class MyPetEnderPearl extends ThrownEnderpearl implements EntityMyPetProj
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
+    public void readAdditionalSaveData(ValueInput valueInput) {
     }
 
     @Override

@@ -24,11 +24,12 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.skill.skills.ranged.bukkit.CraftMyPetDragonFireball;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.DragonFireball;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -72,11 +73,11 @@ public class MyPetDragonFireball extends DragonFireball implements EntityMyPetPr
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbtTagCompound) {
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbtTagCompound) {
+    public void readAdditionalSaveData(ValueInput valueInput) {
     }
 
     @Override

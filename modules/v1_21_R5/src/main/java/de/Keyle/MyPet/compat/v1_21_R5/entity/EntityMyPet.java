@@ -55,7 +55,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -83,6 +82,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
@@ -1250,7 +1250,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	 * MyPets are not persistant so no data needs to be saved
 	 */
 	@Override
-	public boolean saveAsPassenger(CompoundTag nbttagcompound) {
+	public boolean saveAsPassenger(ValueOutput valueOutput) {
 		return false;
 	}
 
