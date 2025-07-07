@@ -51,7 +51,7 @@ public class EntityMyPufferfish extends EntityMyAquaticPet {
 
 	@Override
 	protected String getLivingSound() {
-		return "entity.puffer_fish.ambient";
+		return "entity.puffer_fish.flop";
 	}
 
 	@Override
