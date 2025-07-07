@@ -98,7 +98,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemStackNBTConverter.class);
     private static final TagParser<?> TAG_PARSER_INSTANCE = TagParser.create(NbtOps.INSTANCE);
     private static final StackWalker leWalker = StackWalker.getInstance(Collections.singleton(StackWalker.Option.RETAIN_CLASS_REFERENCE), 4);
-    public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ad"); //Mojang Field: dragonParts
+    public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ae"); //Mojang Field: dragonParts
     private static final RegistryAccess REGISTRY_ACCESS = CraftRegistry.getMinecraftRegistry();
     private static Method readParticleMethod = ReflectionUtil.getMethod(ParticleArgument.class,"a", TagParser.class, StringReader.class, ParticleType.class, HolderLookup.Provider.class);
 
